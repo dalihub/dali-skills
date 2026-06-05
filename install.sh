@@ -16,6 +16,28 @@ fi
 skill_name="$1"
 agent_skills_dir="$2"
 
+if [ -z "$skill_name" ]; then
+  echo "Missing skill name" >&2
+  usage
+  exit 1
+fi
+
+if [ -z "$agent_skills_dir" ]; then
+  echo "Missing agent skills directory" >&2
+  usage
+  exit 1
+fi
+
+if [ "$skill_name" = "{skill-name}" ]; then
+  echo "Replace {skill-name} with a real skill name." >&2
+  exit 1
+fi
+
+if [ "$agent_skills_dir" = "{agent-skills-dir}" ]; then
+  echo "Replace {agent-skills-dir} with a real agent skills directory." >&2
+  exit 1
+fi
+
 case "$skill_name" in
   ""|.*|*/*|*\\*)
     echo "Invalid skill name: $skill_name" >&2
