@@ -24,12 +24,6 @@ name, and that branch contains the installable skill directory.
 | `dali-skill-creator` | Add, update, or organize skills in the `dali-skills` repository. |
 | `dali-ui-wiki-docs` | Create, edit, translate, or review DALi UI GitHub wiki documents. |
 
-To check every published skill branch:
-
-```bash
-git ls-remote --heads https://github.com/dalihub/dali-skills.git
-```
-
 <br/>
 
 ## Install A Skill
@@ -37,7 +31,8 @@ git ls-remote --heads https://github.com/dalihub/dali-skills.git
 ### Ubuntu / macOS
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/dalihub/dali-skills/main/install.sh | bash -s -- <skill-name> <agent-skills-dir>
+curl -fsSL https://raw.githubusercontent.com/dalihub/dali-skills/main/install.sh \
+  | bash -s -- <skill-name> <agent-skills-dir>
 ```
 
 - **`<skill-name>`**: The skill to install. Choose one from
@@ -66,7 +61,8 @@ Use user-global installation when the skill should be available everywhere.
 Install `dali-ui-view-inheritance` for Codex in one project:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/dalihub/dali-skills/main/install.sh | bash -s -- dali-ui-view-inheritance <project-root>/.agents/skills
+curl -fsSL https://raw.githubusercontent.com/dalihub/dali-skills/main/install.sh \
+  | bash -s -- dali-ui-view-inheritance <project-root>/.agents/skills
 ```
 
 <br/>
