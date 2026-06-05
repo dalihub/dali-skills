@@ -8,6 +8,26 @@ name, and that branch contains the installable skill directory.
 The `main` branch is only the entry point for this repository. It does not
 contain the individual skill implementations.
 
+## Available Skills
+
+### App Developer Skills
+
+| Skill | Description |
+|---|---|
+| `dali-ui-view-inheritance` | Create a new DALi UI class derived from `Dali::Ui::View`. |
+
+### DALi Developer Skills
+
+| Skill | Description |
+|---|---|
+| `dali-ui-wiki-docs` | Create, edit, translate, or review DALi UI GitHub wiki documents. |
+
+To check every published skill branch:
+
+```bash
+git ls-remote --heads https://github.com/dalihub/dali-skills.git
+```
+
 ## How Skills Are Distributed
 
 - One skill is stored in one branch.
@@ -85,13 +105,3 @@ Example:
 ```bash
 git -C <project-root>/.agents/skills pull
 ```
-
-## List Available Skills
-
-Available skills are the remote branches in this repository:
-
-```bash
-git ls-remote --heads https://github.com/dalihub/dali-skills.git
-```
-
-Each branch name after `refs/heads/` is a skill name.
