@@ -26,24 +26,37 @@ the `dali-ui-view-inheritance` branch. That branch contains the
 Choose the skill branch you want and clone only that branch into the directory
 where your coding agent reads skills:
 
+| Agent | Project-local skills directory | User-global skills directory |
+|---|---|---|
+| Codex | `<project-root>/.agents/skills` | `~/.agents/skills` |
+| Claude Code | `<project-root>/.claude/skills` | `~/.claude/skills` |
+
 ```bash
 git clone -b <skill-name> --single-branch \
   https://github.com/dalihub/dali-skills.git \
-  <agent-skills-dir>
+  <skills-dir>
 ```
 
-Example:
+Codex project-local example:
 
 ```bash
 git clone -b dali-ui-view-inheritance --single-branch \
   https://github.com/dalihub/dali-skills.git \
-  ~/.codex/skills
+  <project-root>/.agents/skills
+```
+
+Claude Code project-local example:
+
+```bash
+git clone -b dali-ui-view-inheritance --single-branch \
+  https://github.com/dalihub/dali-skills.git \
+  <project-root>/.claude/skills
 ```
 
 After cloning, the skill directory is placed under the destination directory:
 
 ```text
-<agent-skills-dir>/
+<skills-dir>/
   <skill-name>/
     SKILL.md
     ...
@@ -64,13 +77,13 @@ Go to the cloned repository directory and pull the latest version of that
 branch:
 
 ```bash
-git -C <agent-skills-dir> pull
+git -C <skills-dir> pull
 ```
 
 Example:
 
 ```bash
-git -C ~/.codex/skills pull
+git -C <project-root>/.agents/skills pull
 ```
 
 ## List Available Skills
