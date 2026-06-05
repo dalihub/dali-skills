@@ -34,17 +34,20 @@ git ls-remote --heads https://github.com/dalihub/dali-skills.git
 
 ## Install A Skill
 
+### Ubuntu / macOS
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/dalihub/dali-skills/main/install.sh | bash -s -- <skill-name> <agent-skills-dir>
 ```
 
-This command installs or updates the selected skill in the location where your
-coding agent reads skills.
-
 - **`<skill-name>`**: The skill to install. Choose one from
   [Available Skills](#available-skills).
-- **`<agent-skills-dir>`**: The coding agent skills directory. See the table
-  below.
+- **`<agent-skills-dir>`**: The coding agent skills directory. See [here](#coding-agent-install-locations).
+
+This command installs the selected skill in the location where your
+coding agent reads skills. After installing or updating a skill, **restart the coding agent**.
+
+<br/>
 
 #### Coding Agent Install Locations
 
@@ -58,16 +61,7 @@ coding agent reads skills.
 Use project-local installation when the skill should apply only to one project.
 Use user-global installation when the skill should be available everywhere.
 
-After installing, the skill looks like this:
-
-```text
-<agent-skills-dir>/
-  <skill-name>/
-    SKILL.md
-    ...
-```
-
-#### Example 1
+#### Example
 
 Install `dali-ui-view-inheritance` for Codex in one project:
 
@@ -75,16 +69,19 @@ Install `dali-ui-view-inheritance` for Codex in one project:
 curl -fsSL https://raw.githubusercontent.com/dalihub/dali-skills/main/install.sh | bash -s -- dali-ui-view-inheritance <project-root>/.agents/skills
 ```
 
-#### Example 2
+<br/>
 
-Install `dali-ui-wiki-docs` globally for Claude Code:
+### Windows
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/dalihub/dali-skills/main/install.sh | bash -s -- dali-ui-wiki-docs ~/.claude/skills
-```
+1. Open `https://github.com/dalihub/dali-skills`.
+2. Select the branch named after the skill.
+3. Download the branch as a ZIP file.
+4. Extract it.
+5. Copy the `<skill-name>` folder into your coding agent skills directory.
 
-After installing or updating a skill, **restart the coding agent** if it does not
-reload skills automatically.
+After installing or updating a skill, **restart the coding agent**.
+
+<br/>
 
 ## Update A Skill
 
