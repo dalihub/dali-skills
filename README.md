@@ -20,6 +20,7 @@ contain the individual skill implementations.
 
 | Skill | Description |
 |---|---|
+| `dali-skill-creator` | Add, update, or organize skills in the `dali-skills` repository. |
 | `dali-ui-wiki-docs` | Create, edit, translate, or review DALi UI GitHub wiki documents. |
 
 To check every published skill branch:
