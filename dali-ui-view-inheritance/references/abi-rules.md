@@ -25,7 +25,8 @@ For `ViewImpl`-derived classes:
 ## API Levels
 
 - `public-api`: app developer API. Keep ABI stable.
-- `integration-api`: framework/extension developer API. Recompile is allowed, but avoid unnecessary churn.
+- `provider-api`: provider-facing extension points and implementation bases. Treat as ABI-stable provider surface.
+- `integration-api`: extension-library API. Recompile is allowed, but avoid unnecessary churn.
 - `internal`: implementation details only.
 
 Before editing, inspect similar existing files and preserve their API level boundaries.

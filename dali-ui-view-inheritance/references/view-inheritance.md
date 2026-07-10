@@ -2,7 +2,7 @@
 
 ## Reference Template
 
-Use the self-contained template below.
+Use the self-contained template below as a starting point, then adapt it to the closest existing class in the target module.
 
 Template class names are sample names only. Replace them with the user's requested class name.
 
@@ -10,9 +10,10 @@ Template class names are sample names only. Replace them with the user's request
 
 Before creating files, determine the target directory and namespace from the user's request and the local project structure.
 
-- If the local project uses the `dali-ui` API-level layout, follow its existing public-api / integration-api / internal patterns.
-- In an application or extension project, do not assume the `public-api`, `integration-api`, or `internal` directory structure exists.
-- If the target directory or namespace is unclear, ask the user before creating files.
+- In `dali-ui-components`, public handles generally live under `dali-ui-components/public-api/...`; impl classes may live under `integration-api`, `provider-api`, or `internal` depending on whether the class is provider-facing, extension-facing, or component-private. Follow the closest current class rather than assuming one namespace.
+- In `dali-ui-foundation`, follow the closest existing class. `ViewImpl` itself lives under `public-api/views/view-impl.h`, while derived implementation classes may live under `provider-api`, `integration-api`, `extension-api`, or `internal` depending on their audience.
+- In application or extension projects, do not assume the `public-api`, `provider-api`, `integration-api`, or `internal` directory structure exists.
+- If the target directory, API level, or namespace is unclear, ask the user before creating files.
 
 ## Self-contained Template
 
@@ -21,110 +22,128 @@ Before creating files, determine the target directory and namespace from the use
 ```cpp
 #pragma once
 
-#include <dali-ui-foundation/dali-ui-foundation.h>
+#include <dali-ui-foundation/public-api/dali-ui-common.h>
+#include <dali-ui-foundation/public-api/views/view.h>
 
-namespace MyNamespace
+namespace Dali
 {
-
+namespace Ui
+{
+namespace Integration DALI_INTERNAL
+{
 class ProductCardViewImpl;
+}
 
-class ProductCardView : public Dali::Ui::View
+class DALI_UI_API ProductCardView : public View
 {
 public:
-  static ProductCardView New();
-  static ProductCardView DownCast(Dali::BaseHandle handle);
-
   ProductCardView();
+  ~ProductCardView();
+
+  static ProductCardView New();
+  static ProductCardView DownCast(BaseHandle handle);
+
   ProductCardView(const ProductCardView& view);
   ProductCardView(ProductCardView&& rhs) noexcept;
-  DALI_INTERNAL explicit ProductCardView(ProductCardViewImpl& impl);
-  DALI_INTERNAL explicit ProductCardView(Dali::Internal::CustomActor* customActor);
+  ProductCardView& operator=(const ProductCardView& handle);
+  ProductCardView& operator=(ProductCardView&& rhs) noexcept;
 
-  ~ProductCardView(); // non-virtual
-
-  ProductCardView& operator=(const ProductCardView& handle) = default;
-  ProductCardView& operator=(ProductCardView&& rhs) noexcept = default;
+  DALI_UI_VIEW_WITH(ProductCardView)
 
   void DoSomething();
 
-  DALI_UI_CHAIN_VIEW_METHODS(ProductCardView)
-
-  // Do not add data fields to the handle class.
+public: // Not intended for application developers
+  /// @cond internal
+  DALI_INTERNAL ProductCardView(Integration::ProductCardViewImpl& implementation);
+  explicit DALI_INTERNAL ProductCardView(Dali::Internal::CustomActor* internal);
+  /// @endcond
 };
 
-} // namespace MyNamespace
+} // namespace Ui
+} // namespace Dali
 ```
 
 ### Handle Source
 
 ```cpp
-#include "product-card-view.h"
-#include "product-card-view-impl.h"
+#include <dali-ui-components/public-api/product-card-view.h>
 
-namespace MyNamespace
+#include <dali-ui-components/integration-api/product-card-view-impl.h>
+
+namespace Dali
+{
+namespace Ui
 {
 
 namespace
 {
-inline ProductCardViewImpl& GetImpl(ProductCardView& view)
+inline Integration::ProductCardViewImpl& GetImpl(ProductCardView& view)
 {
   DALI_ASSERT_ALWAYS(view);
-  Dali::RefObject& handle = view.GetImplementation();
-  return static_cast<ProductCardViewImpl&>(handle);
+  return static_cast<Integration::ProductCardViewImpl&>(view.GetImplementation());
 }
 
-inline const ProductCardViewImpl& GetImpl(const ProductCardView& view)
+inline const Integration::ProductCardViewImpl& GetImpl(const ProductCardView& view)
 {
   DALI_ASSERT_ALWAYS(view);
-  const Dali::RefObject& handle = view.GetImplementation();
-  return static_cast<const ProductCardViewImpl&>(handle);
+  return static_cast<const Integration::ProductCardViewImpl&>(view.GetImplementation());
 }
-} // unnamed namespace
+} // anonymous namespace
+
+ProductCardView::ProductCardView()
+{
+}
+
+ProductCardView::~ProductCardView()
+{
+}
 
 ProductCardView ProductCardView::New()
 {
-  Dali::IntrusivePtr<ProductCardViewImpl> impl = ProductCardViewImpl::New();
-  ProductCardView handle(*impl);
-  impl->Initialize();
-  return handle;
+  return Integration::ProductCardViewImpl::New();
 }
 
-ProductCardView ProductCardView::DownCast(Dali::BaseHandle handle)
+ProductCardView ProductCardView::DownCast(BaseHandle handle)
 {
-  return Dali::Ui::View::DownCast<ProductCardView, ProductCardViewImpl>(handle);
+  return Ui::View::DownCast<ProductCardView, Integration::ProductCardViewImpl>(handle);
 }
-
-ProductCardView::ProductCardView() = default;
 
 ProductCardView::ProductCardView(const ProductCardView& view)
-: Dali::Ui::View(view)
+: View(view)
 {
 }
 
-ProductCardView::ProductCardView(ProductCardView&& rhs) noexcept
-: Dali::Ui::View(std::move(rhs))
+ProductCardView::ProductCardView(ProductCardView&& rhs) noexcept = default;
+
+ProductCardView& ProductCardView::operator=(const ProductCardView& handle)
 {
+  if(&handle != this)
+  {
+    View::operator=(handle);
+  }
+  return *this;
 }
 
-ProductCardView::ProductCardView(ProductCardViewImpl& impl)
-: Dali::Ui::View(impl)
-{
-}
-
-ProductCardView::ProductCardView(Dali::Internal::CustomActor* customActor)
-: Dali::Ui::View(customActor)
-{
-  VerifyCustomActorPointer<ProductCardViewImpl>(customActor);
-}
-
-ProductCardView::~ProductCardView() = default;
+ProductCardView& ProductCardView::operator=(ProductCardView&& rhs) noexcept = default;
 
 void ProductCardView::DoSomething()
 {
   GetImpl(*this).DoSomething();
 }
 
-} // namespace MyNamespace
+ProductCardView::ProductCardView(Integration::ProductCardViewImpl& implementation)
+: View(implementation)
+{
+}
+
+ProductCardView::ProductCardView(Dali::Internal::CustomActor* internal)
+: View(internal)
+{
+  VerifyCustomActorPointer<Integration::ProductCardViewImpl>(internal);
+}
+
+} // namespace Ui
+} // namespace Dali
 ```
 
 ### Impl Header
@@ -132,157 +151,182 @@ void ProductCardView::DoSomething()
 ```cpp
 #pragma once
 
-#include <dali-ui-foundation/dali-ui-foundation.h>
-#include "product-card-view.h"
+#include <dali-ui-components/public-api/product-card-view.h>
+#include <dali-ui-foundation/public-api/views/view-impl.h>
 
-namespace MyNamespace
+namespace Dali
+{
+namespace Ui
+{
+namespace Integration
 {
 
-class ProductCardViewImpl : public Dali::Ui::ViewImpl
+class DALI_UI_API ProductCardViewImpl : public ViewImpl
 {
 public:
-  static Dali::IntrusivePtr<ProductCardViewImpl> New();
-
-  ProductCardViewImpl();
-  ~ProductCardViewImpl() override = default;
+  static Ui::ProductCardView New();
 
   void DoSomething();
 
 protected:
+  ProductCardViewImpl();
+  ~ProductCardViewImpl() override;
+
   void OnInitialize() override;
+
+private:
+  ProductCardViewImpl(const ProductCardViewImpl&) = delete;
+  ProductCardViewImpl(ProductCardViewImpl&&) = delete;
+  ProductCardViewImpl& operator=(const ProductCardViewImpl&) = delete;
+  ProductCardViewImpl& operator=(ProductCardViewImpl&&) = delete;
 };
 
-} // namespace MyNamespace
+} // namespace Integration
+} // namespace Ui
+} // namespace Dali
 ```
 
 ### Impl Source
 
 ```cpp
+#include <dali-ui-components/integration-api/product-card-view-impl.h>
+
 #include <dali/devel-api/object/type-registry-helper.h>
-#include "product-card-view-impl.h"
+#include <dali/devel-api/object/type-registry.h>
 
-namespace MyNamespace
+namespace Dali
 {
-
+namespace Ui
+{
+namespace Integration
+{
 namespace
 {
-Dali::BaseHandle Create()
+BaseHandle Create()
 {
-  return ProductCardView::New();
+  return BaseHandle();
 }
 
-DALI_TYPE_REGISTRATION_BEGIN(ProductCardViewImpl, Dali::Ui::ViewImpl, Create)
+DALI_TYPE_REGISTRATION_BEGIN(ProductCardViewImpl, ViewImpl, Create)
 DALI_TYPE_REGISTRATION_END()
-} // unnamed namespace
+} // anonymous namespace
 
-Dali::IntrusivePtr<ProductCardViewImpl> ProductCardViewImpl::New()
+Ui::ProductCardView ProductCardViewImpl::New()
 {
-  return Dali::IntrusivePtr<ProductCardViewImpl>(new ProductCardViewImpl());
+  IntrusivePtr<ProductCardViewImpl> impl = new ProductCardViewImpl();
+  Ui::ProductCardView handle = Ui::ProductCardView(*impl);
+  impl->Initialize();
+  return handle;
 }
 
 ProductCardViewImpl::ProductCardViewImpl()
-: Dali::Ui::ViewImpl()
+: ViewImpl()
 {
-  // The handle is not available here. Use OnInitialize() or later.
+}
+
+ProductCardViewImpl::~ProductCardViewImpl()
+{
 }
 
 void ProductCardViewImpl::OnInitialize()
 {
-  Dali::Ui::ViewImpl::OnInitialize();
-
-  ProductCardView handle = ProductCardView::DownCast(Self());
-  handle.SetRequestedWidth(200_spx);
-  handle.SetRequestedHeight(200_spx);
+  ViewImpl::OnInitialize();
 }
 
 void ProductCardViewImpl::DoSomething()
 {
-  ProductCardView handle = ProductCardView::DownCast(Self());
-  handle.SetBackgroundColor(Dali::Ui::UiColor(0x00FFFF));
+  Ui::ProductCardView handle = Ui::ProductCardView::DownCast(Self());
+  handle.SetBackgroundColor(Ui::UiColor(0x00FFFF));
 }
 
-} // namespace MyNamespace
+} // namespace Integration
+} // namespace Ui
+} // namespace Dali
 ```
 
 ## Required Pattern
 
-The handle class inherits from `Dali::Ui::View`.
+The handle class inherits from `Dali::Ui::View` and exports with `DALI_UI_API` when it is part of DALi UI public/provider-facing API.
 
 ```cpp
-class ProductCardView : public Dali::Ui::View
+class DALI_UI_API ProductCardView : public View
 {
 public:
   static ProductCardView New();
-  static ProductCardView DownCast(Dali::BaseHandle handle);
+  static ProductCardView DownCast(BaseHandle handle);
 
   ~ProductCardView(); // non-virtual
 };
 ```
 
-The impl class inherits from `Dali::Ui::ViewImpl`.
+The impl class inherits from `Dali::Ui::ViewImpl`. For current `dali-ui-components` patterns, its `New()` commonly returns the public handle, not an impl pointer.
 
 ```cpp
-class ProductCardViewImpl : public Dali::Ui::ViewImpl
+class DALI_UI_API ProductCardViewImpl : public ViewImpl
 {
 public:
-  static Dali::IntrusivePtr<ProductCardViewImpl> New();
+  static Ui::ProductCardView New();
 
 protected:
   ~ProductCardViewImpl() override;
 };
 ```
 
-## Fluent API Macro
+## Typed Extension Hook
 
-When a new handle class derives from `View`, include `DALI_UI_CHAIN_VIEW_METHODS(Handle)` in the handle class.
+When a new handle class derives from `View`, include `DALI_UI_VIEW_WITH(Handle)` in the handle class.
 
-This macro wraps inherited `View` setters so they return the new handle type. Without it, chaining can break after an inherited setter:
+This macro declares a typed `With()` helper used by current `dali-ui` View-derived handles. It is not a fluent setter-chain macro and it does not make inherited `View` setters return the derived handle type.
 
 ```cpp
-ProductCardView card = ProductCardView::New()
-  .SetBackgroundColor(Dali::Ui::UiColor::PRIMARY); // returns ProductCardView& via macro
+ProductCardView card = ProductCardView::New();
+card.With([](ProductCardView& view) {
+  view.DoSomething();
+});
 ```
 
-This skill does not require new methods in the derived class to follow a specific setter or chaining style. Define action methods, setters, and getters according to the user's requested API.
+Do not use the older `DALI_UI_CHAIN_VIEW_METHODS` name; it is not present in the current `dali-ui` tree.
 
 ## Inheritance Boundary
 
 This skill is for direct inheritance from `Dali::Ui::View`.
 
-`ViewImpl` is a special exception because its impl class is exposed. Other classes such as `Label` and `ImageView` do not generally expose public impl classes for app developers, so external inheritance from those classes is not supported through the normal public API.
+`ViewImpl` is a special exception because it is the intended base for new View-derived implementations. Some existing controls, such as `Label` and `ImageView`, expose impl classes for framework/provider use, but they are not app-developer public inheritance points and should not be treated as normal external base classes.
 
 If the user asks to inherit from `Label`, `ImageView`, or another View-derived class, explain this boundary and recommend data attachment instead. If a separate data-attachment skill is available, use that skill for the task.
 
 ## Handle to Impl
 
-In the handle source file, provide `GetImpl()` helpers.
+Use `GetImpl()` helpers where handle forwarding methods need implementation access. Put helpers in the public source file or in the impl header according to the closest local pattern.
 
 ```cpp
-inline ProductCardViewImpl& GetImpl(ProductCardView& view)
+inline Integration::ProductCardViewImpl& GetImpl(ProductCardView& view)
 {
   DALI_ASSERT_ALWAYS(view);
-  Dali::RefObject& handle = view.GetImplementation();
-  return static_cast<ProductCardViewImpl&>(handle);
+  return static_cast<Integration::ProductCardViewImpl&>(view.GetImplementation());
 }
 ```
 
-Use `View::DownCast<Handle, Impl>()` for DownCast.
+Use `View::DownCast<Handle, Impl>()` for DownCast when the local class uses the standard helper.
 
 ```cpp
-ProductCardView ProductCardView::DownCast(Dali::BaseHandle handle)
+ProductCardView ProductCardView::DownCast(BaseHandle handle)
 {
-  return Dali::Ui::View::DownCast<ProductCardView, ProductCardViewImpl>(handle);
+  return Ui::View::DownCast<ProductCardView, Integration::ProductCardViewImpl>(handle);
 }
 ```
+
+If the closest existing class uses a hand-written dynamic-cast DownCast for a special inheritance hierarchy, follow that local pattern.
 
 ## Creation
 
-Follow the `New()` flow:
+For current DALi UI component classes, follow this `New()` flow unless the local class pattern differs:
 
-1. Create impl with `Impl::New()`.
-2. Create handle from impl.
-3. Call `impl->Initialize()`.
-4. Return handle.
+1. Public handle `New()` delegates to `Impl::New()`.
+2. `Impl::New()` creates the impl with `new Impl()` and stores it in an `IntrusivePtr`.
+3. `Impl::New()` creates the public handle from the impl.
+4. `Impl::New()` calls `impl->Initialize()`.
+5. `Impl::New()` returns the public handle.
 
 ## Type Registration
 
@@ -291,22 +335,24 @@ Register the new type in the impl source file or the source file used by the loc
 ```cpp
 namespace
 {
-Dali::BaseHandle Create()
+BaseHandle Create()
 {
-  return ProductCardView::New();
+  return BaseHandle();
 }
 
-DALI_TYPE_REGISTRATION_BEGIN(ProductCardViewImpl, Dali::Ui::ViewImpl, Create)
+DALI_TYPE_REGISTRATION_BEGIN(ProductCardViewImpl, ViewImpl, Create)
 DALI_TYPE_REGISTRATION_END()
 }
 ```
 
-Keep type registration in the impl source file unless the local project has an explicit alternative pattern.
+Use the correct registered base class. For direct `ViewImpl` subclasses, use `ViewImpl`. For subclasses of another exposed impl, use that impl base.
+
+Many current component implementations return an empty `BaseHandle()` from `Create()` and expose construction through their explicit `New()` factory. If the closest existing class returns a real handle from `Create()`, follow that class.
 
 ## Self()
 
 Inside impl code, call `Self()` when a DALi handle is needed, then downcast if required.
 
 ```cpp
-Dali::Ui::View view = Dali::Ui::View::DownCast(Self());
+Ui::ProductCardView view = Ui::ProductCardView::DownCast(Self());
 ```
