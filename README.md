@@ -21,6 +21,7 @@ name, and that branch contains the installable skill directory.
 
 | Skill | Description |
 |---|---|
+| `dali-dev-assist` | Provide evidence-grounded help for DALi code, API usage, samples, debugging, and documentation. |
 | `dali-skill-creator` | Add, update, or organize skills in the `dali-skills` repository. |
 | `dali-ui-wiki-docs` | Create, edit, translate, or review DALi UI GitHub wiki documents. |
 
