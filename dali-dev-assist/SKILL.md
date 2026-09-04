@@ -1,7 +1,8 @@
 ---
 name: dali-dev-assist
 description: Use this skill when helping with DALi, dali-core, dali-adaptor, or dali-ui code, API usage, samples, guide examples, debugging, or documentation-sensitive implementation. It requires DALi facts to be grounded only in retrieved DALi RAG MCP evidence, not model memory.
-x-updated: "2026-09-03T05:41:22Z"
+metadata:
+  x-updated: "2026-09-04T01:04:38Z"
 ---
 
 # DALi Dev Assist
