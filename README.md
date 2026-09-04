@@ -2,8 +2,9 @@
 
 This repository provides coding agent skills for developing with DALi.
 
-Each skill is managed as a separate Git branch. The branch name is the skill
-name, and that branch contains the installable skill directory.
+The `main` branch contains every skill directory so skill hubs and repository
+scanners can discover all `SKILL.md` files. Each skill is also distributed from
+a Git branch with the same name for branch-based installation.
 
 <br/>
 
