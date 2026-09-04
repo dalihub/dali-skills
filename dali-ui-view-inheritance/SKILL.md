@@ -1,6 +1,8 @@
 ---
 name: dali-ui-view-inheritance
 description: Use this skill when creating a new DALi UI class derived from Dali::Ui::View, including generating the handle/impl pair, ViewImpl subclass, New(), DownCast, GetImpl, Self(), DALI_UI_VIEW_WITH, type registration, and ABI-safe public API structure.
+metadata:
+  x-updated: "2026-09-04T01:04:38Z"
 ---
 
 # DALi UI View Inheritance
