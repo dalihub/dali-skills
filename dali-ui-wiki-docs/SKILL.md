@@ -1,7 +1,8 @@
 ---
 name: dali-ui-wiki-docs
 description: Use this skill when creating, editing, translating, or reviewing DALi UI GitHub wiki documents, especially when maintaining English and Korean page pairs, language links, section spacing, Home links, and wiki footer navigation.
-x-updated: "2026-06-05T10:40:51Z"
+metadata:
+  x-updated: "2026-09-04T01:04:38Z"
 ---
 
 # DALi UI Wiki Docs
